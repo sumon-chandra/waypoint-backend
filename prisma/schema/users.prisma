@@ -1,12 +1,21 @@
 model User {
-    id        String   @id @default(uuid())
-    name      String
-    email     String   @unique
-    password  String
-    role      String
-    avatar    String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id              String    @id @default(uuid())
+    name            String
+    email           String    @unique
+    username        String?   @unique
+    displayUsername String?
+    password        String?
+    avatar          String?
+    image           String?
+    role            String    @default("CUSTOMER")
+    emailVerified   Boolean   @default(false)
+    banned          Boolean?  @default(false)
+    banReason       String?
+    banExpires      DateTime?
+    sessions        Session[]
+    accounts        Account[]
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
 
     @@map("users")
 }
