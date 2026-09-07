@@ -1,0 +1,19 @@
+model Shipment {
+  id             String         @id @default(uuid())
+  trackingNumber String         @unique
+  receiverName   String
+  receiverPhone  String
+  weightKg       Float
+  status         ShipmentStatus @default(PENDING)
+  paymentStatus  PaymentStatus  @default(UNPAID)
+  customerId     String
+  customer       User           @relation("CustomerShipments", fields: [customerId], references: [id])
+  courierId      String?
+  courier        User?          @relation("CourierShipments", fields: [courierId], references: [id])
+  hubId          String?
+  hub            Hub?           @relation(fields: [hubId], references: [id])
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@map("shipments")
+}

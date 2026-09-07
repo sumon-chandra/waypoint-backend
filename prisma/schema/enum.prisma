@@ -1,11 +1,24 @@
 enum Role {
-    ADMIN
-    CUSTOMER
-    COURIER
+  ADMIN
+  CUSTOMER
+  COURIER
 }
 
 enum UserStatus {
-    ACTIVE
-    INACTIVE
-    BANNED
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum ShipmentStatus {
+  PENDING
+  ASSIGNED
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
 }

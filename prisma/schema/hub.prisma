@@ -1,0 +1,10 @@
+model Hub {
+  id        String     @id @default(uuid())
+  name      String
+  address   String
+  shipments Shipment[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("hubs")
+}

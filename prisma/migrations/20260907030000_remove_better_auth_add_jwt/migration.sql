@@ -6,6 +6,9 @@ ALTER TABLE IF EXISTS "sessions" DROP CONSTRAINT IF EXISTS "sessions_userId_fkey
 ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "googleId" TEXT;
 ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE';
 
+-- Rename enum value
+ALTER TYPE "Role" RENAME VALUE 'CUR' TO 'COURIER';
+
 -- Convert role column to Role enum if text
 DO $$
 BEGIN
