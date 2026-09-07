@@ -1,7 +1,7 @@
 enum Role {
     ADMIN
     CUSTOMER
-    CUR
+    COURIER
 }
 
 enum UserStatus {
