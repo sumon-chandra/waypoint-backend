@@ -32,7 +32,6 @@ export type UserMinAggregateOutputType = {
   displayUsername: string | null
   password: string | null
   avatar: string | null
-  image: string | null
   role: $Enums.Role | null
   status: $Enums.UserStatus | null
   googleId: string | null
@@ -52,7 +51,6 @@ export type UserMaxAggregateOutputType = {
   displayUsername: string | null
   password: string | null
   avatar: string | null
-  image: string | null
   role: $Enums.Role | null
   status: $Enums.UserStatus | null
   googleId: string | null
@@ -72,7 +70,6 @@ export type UserCountAggregateOutputType = {
   displayUsername: number
   password: number
   avatar: number
-  image: number
   role: number
   status: number
   googleId: number
@@ -94,7 +91,6 @@ export type UserMinAggregateInputType = {
   displayUsername?: true
   password?: true
   avatar?: true
-  image?: true
   role?: true
   status?: true
   googleId?: true
@@ -114,7 +110,6 @@ export type UserMaxAggregateInputType = {
   displayUsername?: true
   password?: true
   avatar?: true
-  image?: true
   role?: true
   status?: true
   googleId?: true
@@ -134,7 +129,6 @@ export type UserCountAggregateInputType = {
   displayUsername?: true
   password?: true
   avatar?: true
-  image?: true
   role?: true
   status?: true
   googleId?: true
@@ -227,7 +221,6 @@ export type UserGroupByOutputType = {
   displayUsername: string | null
   password: string | null
   avatar: string | null
-  image: string | null
   role: $Enums.Role
   status: $Enums.UserStatus
   googleId: string | null
@@ -268,7 +261,6 @@ export type UserWhereInput = {
   displayUsername?: Prisma.StringNullableFilter<"User"> | string | null
   password?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
-  image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   googleId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -278,6 +270,8 @@ export type UserWhereInput = {
   banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  customerShipments?: Prisma.ShipmentListRelationFilter
+  courierShipments?: Prisma.ShipmentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -288,7 +282,6 @@ export type UserOrderByWithRelationInput = {
   displayUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
-  image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -298,6 +291,8 @@ export type UserOrderByWithRelationInput = {
   banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  customerShipments?: Prisma.ShipmentOrderByRelationAggregateInput
+  courierShipments?: Prisma.ShipmentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -312,7 +307,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   displayUsername?: Prisma.StringNullableFilter<"User"> | string | null
   password?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
-  image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
@@ -321,6 +315,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  customerShipments?: Prisma.ShipmentListRelationFilter
+  courierShipments?: Prisma.ShipmentListRelationFilter
 }, "id" | "email" | "username" | "googleId">
 
 export type UserOrderByWithAggregationInput = {
@@ -331,7 +327,6 @@ export type UserOrderByWithAggregationInput = {
   displayUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
-  image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -357,7 +352,6 @@ export type UserScalarWhereWithAggregatesInput = {
   displayUsername?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -377,7 +371,6 @@ export type UserCreateInput = {
   displayUsername?: string | null
   password?: string | null
   avatar?: string | null
-  image?: string | null
   role?: $Enums.Role
   status?: $Enums.UserStatus
   googleId?: string | null
@@ -387,6 +380,8 @@ export type UserCreateInput = {
   banExpires?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  customerShipments?: Prisma.ShipmentCreateNestedManyWithoutCustomerInput
+  courierShipments?: Prisma.ShipmentCreateNestedManyWithoutCourierInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -397,7 +392,6 @@ export type UserUncheckedCreateInput = {
   displayUsername?: string | null
   password?: string | null
   avatar?: string | null
-  image?: string | null
   role?: $Enums.Role
   status?: $Enums.UserStatus
   googleId?: string | null
@@ -407,6 +401,8 @@ export type UserUncheckedCreateInput = {
   banExpires?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  customerShipments?: Prisma.ShipmentUncheckedCreateNestedManyWithoutCustomerInput
+  courierShipments?: Prisma.ShipmentUncheckedCreateNestedManyWithoutCourierInput
 }
 
 export type UserUpdateInput = {
@@ -417,7 +413,6 @@ export type UserUpdateInput = {
   displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -427,6 +422,8 @@ export type UserUpdateInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerShipments?: Prisma.ShipmentUpdateManyWithoutCustomerNestedInput
+  courierShipments?: Prisma.ShipmentUpdateManyWithoutCourierNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -437,7 +434,6 @@ export type UserUncheckedUpdateInput = {
   displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -447,6 +443,8 @@ export type UserUncheckedUpdateInput = {
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerShipments?: Prisma.ShipmentUncheckedUpdateManyWithoutCustomerNestedInput
+  courierShipments?: Prisma.ShipmentUncheckedUpdateManyWithoutCourierNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -457,7 +455,6 @@ export type UserCreateManyInput = {
   displayUsername?: string | null
   password?: string | null
   avatar?: string | null
-  image?: string | null
   role?: $Enums.Role
   status?: $Enums.UserStatus
   googleId?: string | null
@@ -477,7 +474,6 @@ export type UserUpdateManyMutationInput = {
   displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -497,7 +493,6 @@ export type UserUncheckedUpdateManyInput = {
   displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -509,6 +504,16 @@ export type UserUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -517,7 +522,6 @@ export type UserCountOrderByAggregateInput = {
   displayUsername?: Prisma.SortOrder
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
-  image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
@@ -537,7 +541,6 @@ export type UserMaxOrderByAggregateInput = {
   displayUsername?: Prisma.SortOrder
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
-  image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
@@ -557,7 +560,6 @@ export type UserMinOrderByAggregateInput = {
   displayUsername?: Prisma.SortOrder
   password?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
-  image?: Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
@@ -569,12 +571,34 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type UserCreateNestedOneWithoutCustomerShipmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCustomerShipmentsInput, Prisma.UserUncheckedCreateWithoutCustomerShipmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCustomerShipmentsInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type UserCreateNestedOneWithoutCourierShipmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCourierShipmentsInput, Prisma.UserUncheckedCreateWithoutCourierShipmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCourierShipmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCustomerShipmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCustomerShipmentsInput, Prisma.UserUncheckedCreateWithoutCustomerShipmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCustomerShipmentsInput
+  upsert?: Prisma.UserUpsertWithoutCustomerShipmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCustomerShipmentsInput, Prisma.UserUpdateWithoutCustomerShipmentsInput>, Prisma.UserUncheckedUpdateWithoutCustomerShipmentsInput>
+}
+
+export type UserUpdateOneWithoutCourierShipmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCourierShipmentsInput, Prisma.UserUncheckedCreateWithoutCourierShipmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCourierShipmentsInput
+  upsert?: Prisma.UserUpsertWithoutCourierShipmentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCourierShipmentsInput, Prisma.UserUpdateWithoutCourierShipmentsInput>, Prisma.UserUncheckedUpdateWithoutCourierShipmentsInput>
 }
 
 export type EnumRoleFieldUpdateOperationsInput = {
@@ -597,10 +621,236 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type UserCreateWithoutCustomerShipmentsInput = {
+  id?: string
+  name: string
+  email: string
+  username?: string | null
+  displayUsername?: string | null
+  password?: string | null
+  avatar?: string | null
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  googleId?: string | null
+  emailVerified?: boolean
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  courierShipments?: Prisma.ShipmentCreateNestedManyWithoutCourierInput
 }
 
+export type UserUncheckedCreateWithoutCustomerShipmentsInput = {
+  id?: string
+  name: string
+  email: string
+  username?: string | null
+  displayUsername?: string | null
+  password?: string | null
+  avatar?: string | null
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  googleId?: string | null
+  emailVerified?: boolean
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  courierShipments?: Prisma.ShipmentUncheckedCreateNestedManyWithoutCourierInput
+}
+
+export type UserCreateOrConnectWithoutCustomerShipmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCustomerShipmentsInput, Prisma.UserUncheckedCreateWithoutCustomerShipmentsInput>
+}
+
+export type UserCreateWithoutCourierShipmentsInput = {
+  id?: string
+  name: string
+  email: string
+  username?: string | null
+  displayUsername?: string | null
+  password?: string | null
+  avatar?: string | null
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  googleId?: string | null
+  emailVerified?: boolean
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customerShipments?: Prisma.ShipmentCreateNestedManyWithoutCustomerInput
+}
+
+export type UserUncheckedCreateWithoutCourierShipmentsInput = {
+  id?: string
+  name: string
+  email: string
+  username?: string | null
+  displayUsername?: string | null
+  password?: string | null
+  avatar?: string | null
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  googleId?: string | null
+  emailVerified?: boolean
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customerShipments?: Prisma.ShipmentUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type UserCreateOrConnectWithoutCourierShipmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCourierShipmentsInput, Prisma.UserUncheckedCreateWithoutCourierShipmentsInput>
+}
+
+export type UserUpsertWithoutCustomerShipmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCustomerShipmentsInput, Prisma.UserUncheckedUpdateWithoutCustomerShipmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCustomerShipmentsInput, Prisma.UserUncheckedCreateWithoutCustomerShipmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCustomerShipmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCustomerShipmentsInput, Prisma.UserUncheckedUpdateWithoutCustomerShipmentsInput>
+}
+
+export type UserUpdateWithoutCustomerShipmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  courierShipments?: Prisma.ShipmentUpdateManyWithoutCourierNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCustomerShipmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  courierShipments?: Prisma.ShipmentUncheckedUpdateManyWithoutCourierNestedInput
+}
+
+export type UserUpsertWithoutCourierShipmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCourierShipmentsInput, Prisma.UserUncheckedUpdateWithoutCourierShipmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCourierShipmentsInput, Prisma.UserUncheckedCreateWithoutCourierShipmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCourierShipmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCourierShipmentsInput, Prisma.UserUncheckedUpdateWithoutCourierShipmentsInput>
+}
+
+export type UserUpdateWithoutCourierShipmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerShipments?: Prisma.ShipmentUpdateManyWithoutCustomerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCourierShipmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerShipments?: Prisma.ShipmentUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+
+/**
+ * Count Type UserCountOutputType
+ */
+
+export type UserCountOutputType = {
+  customerShipments: number
+  courierShipments: number
+}
+
+export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  customerShipments?: boolean | UserCountOutputTypeCountCustomerShipmentsArgs
+  courierShipments?: boolean | UserCountOutputTypeCountCourierShipmentsArgs
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserCountOutputType
+   */
+  select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCustomerShipmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShipmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCourierShipmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShipmentWhereInput
+}
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -611,7 +861,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   displayUsername?: boolean
   password?: boolean
   avatar?: boolean
-  image?: boolean
   role?: boolean
   status?: boolean
   googleId?: boolean
@@ -621,6 +870,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   banExpires?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  customerShipments?: boolean | Prisma.User$customerShipmentsArgs<ExtArgs>
+  courierShipments?: boolean | Prisma.User$courierShipmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -631,7 +883,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   displayUsername?: boolean
   password?: boolean
   avatar?: boolean
-  image?: boolean
   role?: boolean
   status?: boolean
   googleId?: boolean
@@ -651,7 +902,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   displayUsername?: boolean
   password?: boolean
   avatar?: boolean
-  image?: boolean
   role?: boolean
   status?: boolean
   googleId?: boolean
@@ -671,7 +921,6 @@ export type UserSelectScalar = {
   displayUsername?: boolean
   password?: boolean
   avatar?: boolean
-  image?: boolean
   role?: boolean
   status?: boolean
   googleId?: boolean
@@ -683,11 +932,21 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "username" | "displayUsername" | "password" | "avatar" | "image" | "role" | "status" | "googleId" | "emailVerified" | "banned" | "banReason" | "banExpires" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "username" | "displayUsername" | "password" | "avatar" | "role" | "status" | "googleId" | "emailVerified" | "banned" | "banReason" | "banExpires" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  customerShipments?: boolean | Prisma.User$customerShipmentsArgs<ExtArgs>
+  courierShipments?: boolean | Prisma.User$courierShipmentsArgs<ExtArgs>
+  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
-  objects: {}
+  objects: {
+    customerShipments: Prisma.$ShipmentPayload<ExtArgs>[]
+    courierShipments: Prisma.$ShipmentPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -696,7 +955,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     displayUsername: string | null
     password: string | null
     avatar: string | null
-    image: string | null
     role: $Enums.Role
     status: $Enums.UserStatus
     googleId: string | null
@@ -1100,6 +1358,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  customerShipments<T extends Prisma.User$customerShipmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customerShipmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShipmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  courierShipments<T extends Prisma.User$courierShipmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$courierShipmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShipmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1136,7 +1396,6 @@ export interface UserFieldRefs {
   readonly displayUsername: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
-  readonly image: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly googleId: Prisma.FieldRef<"User", 'String'>
@@ -1163,6 +1422,10 @@ export type UserFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1181,6 +1444,10 @@ export type UserFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1198,6 +1465,10 @@ export type UserFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * Filter, which User to fetch.
    */
@@ -1247,6 +1518,10 @@ export type UserFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which User to fetch.
    */
   where?: Prisma.UserWhereInput
@@ -1294,6 +1569,10 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * Filter, which Users to fetch.
    */
@@ -1343,6 +1622,10 @@ export type UserCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * The data needed to create a User.
    */
   data: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
@@ -1390,6 +1673,10 @@ export type UserUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * The data needed to update a User.
    */
@@ -1457,6 +1744,10 @@ export type UserUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * The filter to search for the User to update in case it exists.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1483,6 +1774,10 @@ export type UserDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter which User to delete.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1503,6 +1798,54 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.customerShipments
+ */
+export type User$customerShipmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Shipment
+   */
+  select?: Prisma.ShipmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Shipment
+   */
+  omit?: Prisma.ShipmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShipmentInclude<ExtArgs> | null
+  where?: Prisma.ShipmentWhereInput
+  orderBy?: Prisma.ShipmentOrderByWithRelationInput | Prisma.ShipmentOrderByWithRelationInput[]
+  cursor?: Prisma.ShipmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShipmentScalarFieldEnum | Prisma.ShipmentScalarFieldEnum[]
+}
+
+/**
+ * User.courierShipments
+ */
+export type User$courierShipmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Shipment
+   */
+  select?: Prisma.ShipmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Shipment
+   */
+  omit?: Prisma.ShipmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShipmentInclude<ExtArgs> | null
+  where?: Prisma.ShipmentWhereInput
+  orderBy?: Prisma.ShipmentOrderByWithRelationInput | Prisma.ShipmentOrderByWithRelationInput[]
+  cursor?: Prisma.ShipmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShipmentScalarFieldEnum | Prisma.ShipmentScalarFieldEnum[]
+}
+
+/**
  * User without action
  */
 export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1514,4 +1857,8 @@ export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
 }

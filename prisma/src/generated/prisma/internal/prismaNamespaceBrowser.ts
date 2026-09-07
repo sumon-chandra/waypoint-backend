@@ -51,6 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Hub: 'Hub',
+  Shipment: 'Shipment',
   User: 'User'
 } as const
 
@@ -70,6 +72,35 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const HubScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  address: 'address',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HubScalarFieldEnum = (typeof HubScalarFieldEnum)[keyof typeof HubScalarFieldEnum]
+
+
+export const ShipmentScalarFieldEnum = {
+  id: 'id',
+  trackingNumber: 'trackingNumber',
+  receiverName: 'receiverName',
+  receiverPhone: 'receiverPhone',
+  weightKg: 'weightKg',
+  status: 'status',
+  paymentStatus: 'paymentStatus',
+  customerId: 'customerId',
+  courierId: 'courierId',
+  hubId: 'hubId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShipmentScalarFieldEnum = (typeof ShipmentScalarFieldEnum)[keyof typeof ShipmentScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -78,7 +109,6 @@ export const UserScalarFieldEnum = {
   displayUsername: 'displayUsername',
   password: 'password',
   avatar: 'avatar',
-  image: 'image',
   role: 'role',
   status: 'status',
   googleId: 'googleId',
