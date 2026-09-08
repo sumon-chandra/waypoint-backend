@@ -9,3 +9,11 @@ export const createShipmentSchema = z.object({
 });
 
 export type CreateShipmentInput = z.infer<typeof createShipmentSchema>["body"];
+
+export const updateShipmentStatusSchema = z.object({
+	body: z.object({
+		status: z.enum(["PENDING", "ASSIGNED", "IN_TRANSIT", "DELIVERED", "CANCELLED"]),
+	}),
+});
+
+export type UpdateShipmentStatusInput = z.infer<typeof updateShipmentStatusSchema>["body"];

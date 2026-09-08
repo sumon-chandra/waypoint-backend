@@ -27,3 +27,29 @@ export const getMyShipments = asyncHandler(async (req: Request, res: Response) =
 		data: shipments,
 	});
 });
+
+export const getCourierShipments = asyncHandler(async (req: Request, res: Response) => {
+	const courierId = req.user!.id;
+	const shipments = await ShipmentService.getCourierShipmentsFromDB(courierId);
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Shipments retrieved successfully",
+		data: shipments,
+	});
+});
+
+export const updateShipmentStatus = asyncHandler(async (req: Request, res: Response) => {
+	const courierId = req.user!.id;
+	const shipmentId = req.params.id;
+	const { status } = req.body;
+	const shipment = await ShipmentService.updateShipmentStatusFromDB(shipmentId, courierId, status);
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Shipment status updated successfully",
+		data: shipment,
+	});
+});
