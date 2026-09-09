@@ -19,6 +19,7 @@ Waypoint is an enterprise-ready, modular logistics and parcel delivery backend A
 
 - [Core Features](#-core-features)
 - [User Roles & Access Control](#-user-roles--access-control)
+- [End-to-End Workflow](#-end-to-end-workflow)
 - [Tech Stack](#-tech-stack)
 - [Project Architecture](#-project-architecture)
 - [API Documentation & Postman](#-api-documentation--postman)
@@ -76,6 +77,21 @@ Waypoint is an enterprise-ready, modular logistics and parcel delivery backend A
 | `CUSTOMER` | Creates shipments, views own parcel history, initiates Stripe checkout, views personal shipping analytics.                                              |
 | `COURIER`  | Views shipments assigned to them, advances delivery statuses (`IN_TRANSIT`, `DELIVERED`), views personal delivery stats.                                |
 | `ADMIN`    | Full administrative access: creates/manages hubs, assigns couriers to shipments, inspects all shipments, accesses platform analytics & exports reports. |
+
+---
+
+## 🔄 End-to-End Workflow
+
+For a detailed step-by-step walkthrough covering all user roles (**Customer**, **Courier**, and **Admin**) with sequence diagrams and request payloads, please refer to the dedicated guide:
+
+👉 **[Complete End-to-End Workflow & Testing Guide (WORKFLOW.md)](WORKFLOW.md)**
+
+### Lifecycle at a Glance:
+1. **🏢 Hub Setup:** Admin provisions regional distribution hubs (`POST /api/v1/hubs`).
+2. **📦 Booking & Payment:** Customer books parcel (`POST /api/v1/shipments`) and completes Stripe Checkout (`POST /api/v1/payments/create-checkout-session`).
+3. **🎯 Dispatching:** Admin assigns an active courier and hub (`PATCH /api/v1/shipments/:id/assign-courier`).
+4. **🛵 Delivery:** Courier transitions parcel from `IN_TRANSIT` to `DELIVERED` (`PATCH /api/v1/shipments/:id/status`).
+5. **📊 Auditing & BI:** Role-tailored metrics for customers & couriers, plus platform-wide analytics and downloadable CSV reports for admins.
 
 ---
 
@@ -166,9 +182,9 @@ Base URL: `https://waypointapi.vercel.app/api/v1`
 
 ### 02. Users (`/users`)
 
-| Method | Endpoint | Access | Description                      |
-| :----- | :------- | :----- | :------------------------------- |
-| `GET`  | `/users` | Public | List all registered system users |
+| Method | Endpoint | Access  | Description                                 |
+| :----- | :------- | :------ | :------------------------------------------ |
+| `GET`  | `/users` | `ADMIN` | List all registered users (Requires ADMIN) |
 
 ### 03. Shipments (`/shipments`)
 
