@@ -77,6 +77,8 @@ export const HubScalarFieldEnum = {
   id: 'id',
   name: 'name',
   address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

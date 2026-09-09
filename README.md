@@ -169,22 +169,27 @@ Base URL: `https://waypointapi.vercel.app/api/v1`
 
 ### 01. Authentication (`/auth`)
 
-| Method | Endpoint                | Access | Description                                              |
-| :----- | :---------------------- | :----- | :------------------------------------------------------- |
-| `POST` | `/auth/register`        | Public | Register new user account                                |
-| `POST` | `/auth/login`           | Public | Authenticate user & receive access token / cookies       |
-| `GET`  | `/auth/me`              | Bearer | Retrieve profile of currently authenticated user         |
-| `POST` | `/auth/refresh-token`   | Public | Generate fresh access token using refresh token          |
-| `POST` | `/auth/logout`          | Public | Clear authentication session cookies                     |
-| `POST` | `/auth/google`          | Public | Social login using Google ID token or authorization code |
-| `GET`  | `/auth/google`          | Public | Initiates Google OAuth redirect flow                     |
-| `GET`  | `/auth/google/callback` | Public | Google OAuth callback handler                            |
+| Method | Endpoint                | Access | Description                                                              |
+| :----- | :---------------------- | :----- | :----------------------------------------------------------------------- |
+| `POST` | `/auth/register`        | Public | Register new user account (select `role: CUSTOMER` or `COURIER`)         |
+| `POST` | `/auth/login`           | Public | Authenticate user & receive access token / cookies                       |
+| `GET`  | `/auth/me`              | Bearer | Retrieve profile of currently authenticated user                         |
+| `POST` | `/auth/refresh-token`   | Public | Generate fresh access token using refresh token                          |
+| `POST` | `/auth/logout`          | Public | Clear authentication session cookies                                     |
+| `POST` | `/auth/google`          | Public | Social login using Google ID token or authorization code                 |
+| `GET`  | `/auth/google`          | Public | Initiates Google OAuth redirect flow                                     |
+| `GET`  | `/auth/google/callback` | Public | Google OAuth callback handler                                            |
 
 ### 02. Users (`/users`)
 
-| Method | Endpoint | Access  | Description                                 |
-| :----- | :------- | :------ | :------------------------------------------ |
-| `GET`  | `/users` | `ADMIN` | List all registered users (Requires ADMIN) |
+| Method  | Endpoint            | Access          | Description                                                               |
+| :------ | :------------------ | :-------------- | :------------------------------------------------------------------------ |
+| `GET`   | `/users`            | `ADMIN`         | List all registered users across the platform                             |
+| `GET`   | `/users/profile`    | Bearer          | Retrieve profile of currently authenticated user                          |
+| `PATCH` | `/users/profile`    | Bearer          | Update personal user profile data (name, avatar, username, password)      |
+| `PATCH` | `/users/:id/status` | `ADMIN`         | Update user status (`ACTIVE`, `INACTIVE`, `BANNED`) with ban reason       |
+| `GET`   | `/users/:id`        | Bearer (Self/Admin) | Retrieve specific user details by UUID                                |
+| `PATCH` | `/users/:id`        | Bearer (Self/Admin) | Update user profile data by UUID                                      |
 
 ### 03. Shipments (`/shipments`)
 

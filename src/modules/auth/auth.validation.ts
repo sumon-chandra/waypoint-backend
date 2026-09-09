@@ -1,15 +1,22 @@
 import { z } from "zod";
+import { UserRole } from "../../../types";
 
 export const registerValidationSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters long"),
 	email: z.string().email("Invalid email address"),
 	password: z
 		.string()
-		.min(6, "Password must be at least 6 characters")
+		.min(6, "Password must be at least 6 characters"),
 		// .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
 		// .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
 		// .regex(/[0-9]/, "Password must contain at least 1 number")
 		// .regex(/[^A-Za-z0-9]/, "Password must contain at least 1 special character"),
+	role: z
+		.enum([UserRole.CUSTOMER, UserRole.COURIER] as const, {
+			message: "Role must be either CUSTOMER or COURIER",
+		})
+		.optional()
+		.default(UserRole.CUSTOMER),
 });
 
 export const loginValidationSchema = z.object({

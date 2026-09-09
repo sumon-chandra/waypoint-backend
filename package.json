@@ -5,6 +5,7 @@
     "dev": "tsx watch ./src/server.ts",
     "build": "bunx tsc --noEmit",
     "db:migrate": "bunx prisma migrate dev --name",
+    "db:push": "bunx prisma db push",
     "db:generate": "bunx prisma generate",
     "postinstall": "prisma generate"
   },

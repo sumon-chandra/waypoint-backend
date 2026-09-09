@@ -43,6 +43,11 @@
       "key": "stripeSignature",
       "value": "t=1614555555,v1=sample_test_signature",
       "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -75,7 +80,7 @@
       "description": "User registration, login, JWT token refresh, OAuth, and current profile",
       "item": [
         {
-          "name": "Register User (Customer / Courier / Admin)",
+          "name": "Register User (Default: Customer)",
           "event": [
             {
               "listen": "test",
@@ -91,6 +96,10 @@
                   "    if (json && json.data && json.data.refreshToken) {",
                   "        pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
                   "        pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "    }",
+                  "    if (json && json.data && json.data.user && json.data.user.id) {",
+                  "        pm.collectionVariables.set('userId', json.data.user.id);",
+                  "        pm.environment.set('userId', json.data.user.id);",
                   "    }",
                   "}"
                 ],
@@ -112,7 +121,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Customer\",\n  \"email\": \"customer@waypoint.com\",\n  \"password\": \"Password123!\"\n}",
+              "raw": "{\n  \"name\": \"John Customer\",\n  \"email\": \"customer@waypoint.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"CUSTOMER\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -131,7 +140,73 @@
                 "register"
               ]
             },
-            "description": "Register a new user account. Sets HTTP-only cookies and returns access token. Test script automatically captures `accessToken`."
+            "description": "Register a new Customer user account. The role defaults to CUSTOMER if omitted."
+          }
+        },
+        {
+          "name": "Register User as Courier (role: COURIER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        pm.environment.set('accessToken', json.data.accessToken);",
+                  "        console.log('Saved accessToken to variables: ' + json.data.accessToken.substring(0, 15) + '...');",
+                  "    }",
+                  "    if (json && json.data && json.data.refreshToken) {",
+                  "        pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "        pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "    }",
+                  "    if (json && json.data && json.data.user && json.data.user.id) {",
+                  "        pm.collectionVariables.set('courierId', json.data.user.id);",
+                  "        pm.environment.set('courierId', json.data.user.id);",
+                  "        pm.collectionVariables.set('userId', json.data.user.id);",
+                  "        pm.environment.set('userId', json.data.user.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dave Courier\",\n  \"email\": \"courier@waypoint.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"COURIER\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new user with COURIER role. Automatically sets `courierId` and `accessToken` variables."
           }
         },
         {
@@ -424,10 +499,10 @@
     },
     {
       "name": "02. Users",
-      "description": "User management and retrieval (Admin)",
+      "description": "User profile management, self-service updates, and Admin user status moderation (ACTIVE, INACTIVE, BANNED)",
       "item": [
         {
-          "name": "Get All Users",
+          "name": "Get All Users (Admin)",
           "request": {
             "auth": {
               "type": "noauth"
@@ -451,7 +526,239 @@
                 "users"
               ]
             },
-            "description": "Retrieve a list of all registered users across the platform. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
+            "description": "Retrieve a list of all registered users across the platform. Requires ADMIN role. Pass ADMIN accessToken in Authorization header."
+          }
+        },
+        {
+          "name": "Get Current User Profile (/users/profile)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "profile"
+              ]
+            },
+            "description": "Retrieve the full profile of the currently authenticated user (Customer, Courier, or Admin)."
+          }
+        },
+        {
+          "name": "Update Current User Profile",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dave Courier Updated\",\n  \"displayUsername\": \"dave_fast\",\n  \"avatar\": \"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "profile"
+              ]
+            },
+            "description": "Allows any authenticated user to update their own profile data (name, displayUsername, username, avatar, and password)."
+          }
+        },
+        {
+          "name": "Admin - Update User Status (BANNED or INACTIVE)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"BANNED\",\n  \"banReason\": \"Suspicious activities and delivery terms violations\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}",
+                "status"
+              ]
+            },
+            "description": "Admin endpoint to update user status to BANNED or INACTIVE. Immediately prevents user from logging in or performing any authenticated actions."
+          }
+        },
+        {
+          "name": "Admin - Reactivate User Status (ACTIVE)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}",
+                "status"
+              ]
+            },
+            "description": "Admin endpoint to reactivate a suspended/inactive user back to ACTIVE."
+          }
+        },
+        {
+          "name": "Get User by ID (Admin or Self)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Retrieve specific user record by UUID. Accessible by ADMIN or the user themselves."
+          }
+        },
+        {
+          "name": "Update User Data by ID (Admin or Self)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Update specific user profile fields by UUID. Accessible by ADMIN or the user themselves."
           }
         }
       ]

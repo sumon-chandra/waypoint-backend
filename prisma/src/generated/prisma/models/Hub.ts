@@ -20,14 +20,28 @@ export type HubModel = runtime.Types.Result.DefaultSelection<Prisma.$HubPayload>
 
 export type AggregateHub = {
   _count: HubCountAggregateOutputType | null
+  _avg: HubAvgAggregateOutputType | null
+  _sum: HubSumAggregateOutputType | null
   _min: HubMinAggregateOutputType | null
   _max: HubMaxAggregateOutputType | null
+}
+
+export type HubAvgAggregateOutputType = {
+  latitude: number | null
+  longitude: number | null
+}
+
+export type HubSumAggregateOutputType = {
+  latitude: number | null
+  longitude: number | null
 }
 
 export type HubMinAggregateOutputType = {
   id: string | null
   name: string | null
   address: string | null
+  latitude: number | null
+  longitude: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -36,6 +50,8 @@ export type HubMaxAggregateOutputType = {
   id: string | null
   name: string | null
   address: string | null
+  latitude: number | null
+  longitude: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,16 +60,30 @@ export type HubCountAggregateOutputType = {
   id: number
   name: number
   address: number
+  latitude: number
+  longitude: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type HubAvgAggregateInputType = {
+  latitude?: true
+  longitude?: true
+}
+
+export type HubSumAggregateInputType = {
+  latitude?: true
+  longitude?: true
+}
+
 export type HubMinAggregateInputType = {
   id?: true
   name?: true
   address?: true
+  latitude?: true
+  longitude?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -62,6 +92,8 @@ export type HubMaxAggregateInputType = {
   id?: true
   name?: true
   address?: true
+  latitude?: true
+  longitude?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,6 +102,8 @@ export type HubCountAggregateInputType = {
   id?: true
   name?: true
   address?: true
+  latitude?: true
+  longitude?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -113,6 +147,18 @@ export type HubAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: HubAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: HubSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: HubMinAggregateInputType
@@ -143,6 +189,8 @@ export type HubGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   _count?: HubCountAggregateInputType | true
+  _avg?: HubAvgAggregateInputType
+  _sum?: HubSumAggregateInputType
   _min?: HubMinAggregateInputType
   _max?: HubMaxAggregateInputType
 }
@@ -151,9 +199,13 @@ export type HubGroupByOutputType = {
   id: string
   name: string
   address: string
+  latitude: number | null
+  longitude: number | null
   createdAt: Date
   updatedAt: Date
   _count: HubCountAggregateOutputType | null
+  _avg: HubAvgAggregateOutputType | null
+  _sum: HubSumAggregateOutputType | null
   _min: HubMinAggregateOutputType | null
   _max: HubMaxAggregateOutputType | null
 }
@@ -180,6 +232,8 @@ export type HubWhereInput = {
   id?: Prisma.StringFilter<"Hub"> | string
   name?: Prisma.StringFilter<"Hub"> | string
   address?: Prisma.StringFilter<"Hub"> | string
+  latitude?: Prisma.FloatNullableFilter<"Hub"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"Hub"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Hub"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hub"> | Date | string
   shipments?: Prisma.ShipmentListRelationFilter
@@ -189,6 +243,8 @@ export type HubOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   shipments?: Prisma.ShipmentOrderByRelationAggregateInput
@@ -201,6 +257,8 @@ export type HubWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.HubWhereInput | Prisma.HubWhereInput[]
   name?: Prisma.StringFilter<"Hub"> | string
   address?: Prisma.StringFilter<"Hub"> | string
+  latitude?: Prisma.FloatNullableFilter<"Hub"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"Hub"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Hub"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hub"> | Date | string
   shipments?: Prisma.ShipmentListRelationFilter
@@ -210,11 +268,15 @@ export type HubOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HubCountOrderByAggregateInput
+  _avg?: Prisma.HubAvgOrderByAggregateInput
   _max?: Prisma.HubMaxOrderByAggregateInput
   _min?: Prisma.HubMinOrderByAggregateInput
+  _sum?: Prisma.HubSumOrderByAggregateInput
 }
 
 export type HubScalarWhereWithAggregatesInput = {
@@ -224,6 +286,8 @@ export type HubScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Hub"> | string
   name?: Prisma.StringWithAggregatesFilter<"Hub"> | string
   address?: Prisma.StringWithAggregatesFilter<"Hub"> | string
+  latitude?: Prisma.FloatNullableWithAggregatesFilter<"Hub"> | number | null
+  longitude?: Prisma.FloatNullableWithAggregatesFilter<"Hub"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hub"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Hub"> | Date | string
 }
@@ -232,6 +296,8 @@ export type HubCreateInput = {
   id?: string
   name: string
   address: string
+  latitude?: number | null
+  longitude?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   shipments?: Prisma.ShipmentCreateNestedManyWithoutHubInput
@@ -241,6 +307,8 @@ export type HubUncheckedCreateInput = {
   id?: string
   name: string
   address: string
+  latitude?: number | null
+  longitude?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   shipments?: Prisma.ShipmentUncheckedCreateNestedManyWithoutHubInput
@@ -250,6 +318,8 @@ export type HubUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shipments?: Prisma.ShipmentUpdateManyWithoutHubNestedInput
@@ -259,6 +329,8 @@ export type HubUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   shipments?: Prisma.ShipmentUncheckedUpdateManyWithoutHubNestedInput
@@ -268,6 +340,8 @@ export type HubCreateManyInput = {
   id?: string
   name: string
   address: string
+  latitude?: number | null
+  longitude?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -276,6 +350,8 @@ export type HubUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -284,6 +360,8 @@ export type HubUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -292,14 +370,23 @@ export type HubCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HubAvgOrderByAggregateInput = {
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type HubMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -308,8 +395,15 @@ export type HubMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HubSumOrderByAggregateInput = {
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type HubNullableScalarRelationFilter = {
@@ -319,6 +413,14 @@ export type HubNullableScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -345,6 +447,8 @@ export type HubCreateWithoutShipmentsInput = {
   id?: string
   name: string
   address: string
+  latitude?: number | null
+  longitude?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -353,6 +457,8 @@ export type HubUncheckedCreateWithoutShipmentsInput = {
   id?: string
   name: string
   address: string
+  latitude?: number | null
+  longitude?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -377,6 +483,8 @@ export type HubUpdateWithoutShipmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -385,6 +493,8 @@ export type HubUncheckedUpdateWithoutShipmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -424,6 +534,8 @@ export type HubSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   id?: boolean
   name?: boolean
   address?: boolean
+  latitude?: boolean
+  longitude?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   shipments?: boolean | Prisma.Hub$shipmentsArgs<ExtArgs>
@@ -434,6 +546,8 @@ export type HubSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   id?: boolean
   name?: boolean
   address?: boolean
+  latitude?: boolean
+  longitude?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["hub"]>
@@ -442,6 +556,8 @@ export type HubSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   id?: boolean
   name?: boolean
   address?: boolean
+  latitude?: boolean
+  longitude?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["hub"]>
@@ -450,11 +566,13 @@ export type HubSelectScalar = {
   id?: boolean
   name?: boolean
   address?: boolean
+  latitude?: boolean
+  longitude?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HubOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["hub"]>
+export type HubOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "latitude" | "longitude" | "createdAt" | "updatedAt", ExtArgs["result"]["hub"]>
 export type HubInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   shipments?: boolean | Prisma.Hub$shipmentsArgs<ExtArgs>
   _count?: boolean | Prisma.HubCountOutputTypeDefaultArgs<ExtArgs>
@@ -471,6 +589,8 @@ export type $HubPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     id: string
     name: string
     address: string
+    latitude: number | null
+    longitude: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["hub"]>
@@ -900,6 +1020,8 @@ export interface HubFieldRefs {
   readonly id: Prisma.FieldRef<"Hub", 'String'>
   readonly name: Prisma.FieldRef<"Hub", 'String'>
   readonly address: Prisma.FieldRef<"Hub", 'String'>
+  readonly latitude: Prisma.FieldRef<"Hub", 'Float'>
+  readonly longitude: Prisma.FieldRef<"Hub", 'Float'>
   readonly createdAt: Prisma.FieldRef<"Hub", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Hub", 'DateTime'>
 }

@@ -45,6 +45,28 @@ sequenceDiagram
 ### Step 1: Authentication & Role Setup
 Register or log in as each user role to obtain your `accessToken`. Include the token in subsequent requests as `Authorization: Bearer <token>`.
 
+- **Register as Customer (Default Role)**:
+  - `POST /api/v1/auth/register`
+  - Body:
+    ```json
+    {
+      "name": "John Customer",
+      "email": "customer@waypoint.com",
+      "password": "Password123!",
+      "role": "CUSTOMER"
+    }
+    ```
+- **Register as Courier (Role Option)**:
+  - `POST /api/v1/auth/register`
+  - Body:
+    ```json
+    {
+      "name": "Dave Courier",
+      "email": "courier@waypoint.com",
+      "password": "Password123!",
+      "role": "COURIER"
+    }
+    ```
 - **Customer Login**:
   - `POST /api/v1/auth/login`
   - Body: `{ "email": "customer@waypoint.com", "password": "Password123!" }`
@@ -164,3 +186,54 @@ Verify performance and shipping metrics across all three user roles:
 | **Admin** | `GET /api/v1/analytics/admin/trends?interval=day` | Time-series delivery and revenue trends |
 | **Admin** | `GET /api/v1/analytics/admin/reports/shipments?format=csv` | Downloadable CSV report of all shipment transactions |
 | **Admin** | `GET /api/v1/analytics/admin/reports/payments?format=csv` | Downloadable CSV report of all financial ledger transactions |
+
+---
+
+### Step 7: User Profile Management & Admin Status Moderation
+
+#### 1. User Updates Their Own Profile
+Any authenticated user (`CUSTOMER`, `COURIER`, or `ADMIN`) can update their personal profile data:
+
+- **Endpoint**: `PATCH /api/v1/users/profile` (or `PATCH /api/v1/users/me`)
+- **Headers**: `Authorization: Bearer <USER_TOKEN>`
+- **Request Body**:
+  ```json
+  {
+    "name": "Dave Courier Fast",
+    "displayUsername": "dave_fast_courier",
+    "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
+  }
+  ```
+- **Result**: Profile data updated. Returns sanitized user record without password.
+
+#### 2. User Updates Their Data by ID (Self or Admin)
+- **Endpoint**: `PATCH /api/v1/users/:id`
+- **Headers**: `Authorization: Bearer <TOKEN>`
+- **URL Parameter**: `:id` = `<userId>`
+- **Access Control**: Users may only update their own record; `ADMIN` can update any user record.
+
+#### 3. [Admin] Moderate User Status (BANNED / INACTIVE / ACTIVE)
+Administrators have access to deactivate or ban users (e.g. fraudulent accounts or policy violations):
+
+- **Endpoint**: `PATCH /api/v1/users/:id/status`
+- **Headers**: `Authorization: Bearer <ADMIN_TOKEN>`
+- **URL Parameter**: `:id` = `<userId>`
+- **Request Body (Ban User)**:
+  ```json
+  {
+    "status": "BANNED",
+    "banReason": "Repeated non-delivery policy violations"
+  }
+  ```
+- **Result**: User status set to `BANNED` (`banned: true`). Immediate effect:
+  - Any subsequent API requests using this user's token fail with `403 Forbidden` (`"Your account is deactivated or suspended."`).
+  - Any subsequent login attempt by this user is rejected with `403 Forbidden`.
+
+- **Request Body (Reactivate User)**:
+  ```json
+  {
+    "status": "ACTIVE"
+  }
+  ```
+- **Result**: User status is restored to `ACTIVE` (`banned: false`), restoring full platform access.
+

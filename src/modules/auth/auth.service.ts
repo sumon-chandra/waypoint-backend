@@ -52,7 +52,7 @@ const getOAuthClient = () => {
 };
 
 /**
- * Register a new user with CUSTOMER role
+ * Register a new user with CUSTOMER or COURIER role
  */
 const registerUser = async (payload: RegisterInput) => {
 	const existingUser = await prisma.user.findUnique({
@@ -70,7 +70,7 @@ const registerUser = async (payload: RegisterInput) => {
 			name: payload.name,
 			email: payload.email.toLowerCase(),
 			password: hashedPassword,
-			role: UserRole.CUSTOMER,
+			role: payload.role || UserRole.CUSTOMER,
 			emailVerified: false,
 		},
 	});
