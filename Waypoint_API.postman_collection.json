@@ -2,18 +2,11 @@
   "info": {
     "_postman_id": "a3b90f42-491c-4e89-8d74-waypoint-api-v1",
     "name": "Waypoint Delivery & Logistics API",
-    "description": "Production API Collection for Waypoint Delivery & Logistics Platform hosted at https://waypointapi.vercel.app.\n\n### Authentication\nMost endpoints require a JWT Bearer token. Authenticating via `/api/v1/auth/login` or `/api/v1/auth/register` will automatically set the `accessToken` variable.\n\n### Roles Supported\n- **CUSTOMER**: Creates shipments, tracks their shipments, pays via Stripe, views customer analytics.\n- **COURIER**: Views assigned shipments, updates shipment delivery status, views courier analytics.\n- **ADMIN**: Manages hubs, assigns couriers to shipments, reads all shipments/users, views full business analytics & export reports.",
+    "description": "Production API Collection for Waypoint Delivery & Logistics Platform hosted at https://waypointapi.vercel.app.\n\n### Authentication\nProtected endpoints use the `Authorization` header (`Headers -> Authorization: {{accessToken}}`). Authenticating via `/api/v1/auth/login` or `/api/v1/auth/register` will automatically set the `accessToken` variable.\n\n### Roles Supported\n- **CUSTOMER**: Creates shipments, tracks their shipments, pays via Stripe, views customer analytics.\n- **COURIER**: Views assigned shipments, updates shipment delivery status, views courier analytics.\n- **ADMIN**: Manages hubs, assigns couriers to shipments, reads all shipments/users, views full business analytics & export reports.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{accessToken}}",
-        "type": "string"
-      }
-    ]
+    "type": "noauth"
   },
   "variable": [
     {
@@ -204,8 +197,17 @@
         {
           "name": "Get Current User Profile (/me)",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/me",
               "host": [
@@ -218,7 +220,7 @@
                 "me"
               ]
             },
-            "description": "Fetches details of the currently authenticated user based on the Bearer access token."
+            "description": "Fetches details of the currently authenticated user based on Headers -> Authorization: {{accessToken}}."
           }
         },
         {
@@ -422,13 +424,22 @@
     },
     {
       "name": "02. Users",
-      "description": "User management and retrieval",
+      "description": "User management and retrieval (Admin)",
       "item": [
         {
           "name": "Get All Users",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/users",
               "host": [
@@ -440,7 +451,7 @@
                 "users"
               ]
             },
-            "description": "Retrieve a list of all registered users across the platform. Requires ADMIN role."
+            "description": "Retrieve a list of all registered users across the platform. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         }
       ]
@@ -470,11 +481,19 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -498,14 +517,23 @@
                 "shipments"
               ]
             },
-            "description": "Create a new parcel delivery shipment. Requires CUSTOMER role. Generates tracking number and initial PENDING status. Automatically saves `shipmentId`."
+            "description": "Create a new parcel delivery shipment. Requires CUSTOMER role. Uses Headers -> Authorization: {{accessToken}}. Automatically saves `shipmentId`."
           }
         },
         {
           "name": "Customer - Get My Shipments",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/shipments/my-shipments",
               "host": [
@@ -518,14 +546,23 @@
                 "my-shipments"
               ]
             },
-            "description": "Retrieve all shipments created by the authenticated customer."
+            "description": "Retrieve all shipments created by the authenticated customer. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Courier - Get Assigned Shipments",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/shipments/assigned-shipments",
               "host": [
@@ -538,17 +575,25 @@
                 "assigned-shipments"
               ]
             },
-            "description": "Retrieve shipments assigned to the currently authenticated courier."
+            "description": "Retrieve shipments assigned to the currently authenticated courier. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Courier - Update Shipment Status",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "PATCH",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -581,14 +626,23 @@
                 }
               ]
             },
-            "description": "Update the status of an assigned shipment. Allowed statuses: PENDING, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED."
+            "description": "Update the status of an assigned shipment. Allowed statuses: PENDING, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Get All Shipments",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/shipments",
               "host": [
@@ -600,14 +654,23 @@
                 "shipments"
               ]
             },
-            "description": "Retrieve all shipments in the system. Requires ADMIN role."
+            "description": "Retrieve all shipments in the system. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Get All Shipments (Alias)",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/shipments/all",
               "host": [
@@ -620,17 +683,25 @@
                 "all"
               ]
             },
-            "description": "Alternative endpoint to retrieve all shipments. Requires ADMIN role."
+            "description": "Alternative endpoint to retrieve all shipments. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Assign Courier To Shipment",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "PATCH",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -663,7 +734,7 @@
                 }
               ]
             },
-            "description": "Assign a courier (and optional hub) to a shipment. Requires ADMIN role. Updates shipment status to ASSIGNED."
+            "description": "Assign a courier (and optional hub) to a shipment. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         }
       ]
@@ -693,11 +764,19 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -721,14 +800,23 @@
                 "hubs"
               ]
             },
-            "description": "Create a new logistics hub. Requires ADMIN role. Automatically saves `hubId`."
+            "description": "Create a new logistics hub. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}. Automatically saves `hubId`."
           }
         },
         {
           "name": "Get All Hubs",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/hubs",
               "host": [
@@ -740,14 +828,23 @@
                 "hubs"
               ]
             },
-            "description": "List all operational hubs with current shipment counts. Requires ADMIN role."
+            "description": "List all operational hubs with current shipment counts. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Get Hub By ID",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/hubs/:id",
               "host": [
@@ -767,17 +864,25 @@
                 }
               ]
             },
-            "description": "Retrieve details of a single hub by UUID. Requires ADMIN role."
+            "description": "Retrieve details of a single hub by UUID. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Update Hub",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "PATCH",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -809,14 +914,23 @@
                 }
               ]
             },
-            "description": "Update hub name and address. Requires ADMIN role."
+            "description": "Update hub name and address. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Delete Hub",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/hubs/:id",
               "host": [
@@ -836,7 +950,7 @@
                 }
               ]
             },
-            "description": "Remove a hub from the system. Requires ADMIN role."
+            "description": "Remove a hub from the system. Requires ADMIN role. Uses Headers -> Authorization: {{accessToken}}."
           }
         }
       ]
@@ -848,11 +962,19 @@
         {
           "name": "Create Stripe Checkout Session",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -877,17 +999,25 @@
                 "create-checkout-session"
               ]
             },
-            "description": "Initiates a Stripe Checkout Session for the specified shipment. Returns the hosted checkout URL and session ID. Requires CUSTOMER role."
+            "description": "Initiates a Stripe Checkout Session for the specified shipment. Returns the hosted checkout URL and session ID. Requires CUSTOMER role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Create Payment Intent (Legacy Alias)",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
                 "type": "text"
               }
             ],
@@ -912,7 +1042,7 @@
                 "create-intent"
               ]
             },
-            "description": "Backward compatible alias for `create-checkout-session`. Requires CUSTOMER role."
+            "description": "Backward compatible alias for `create-checkout-session`. Requires CUSTOMER role. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
@@ -1011,8 +1141,17 @@
         {
           "name": "Admin - Key Metrics Overview",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/overview?startDate=2026-01-01&endDate=2026-12-31",
               "host": [
@@ -1038,14 +1177,23 @@
                 }
               ]
             },
-            "description": "High-level summary of total shipments, revenue, delivery success rate, active couriers, and hubs."
+            "description": "High-level summary of total shipments, revenue, delivery success rate, active couriers, and hubs. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Trends (Daily / Weekly / Monthly)",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/trends?startDate=2026-01-01&endDate=2026-12-31&interval=day",
               "host": [
@@ -1076,14 +1224,23 @@
                 }
               ]
             },
-            "description": "Time-series volume and revenue analytics aggregated by day, week, or month."
+            "description": "Time-series volume and revenue analytics aggregated by day, week, or month. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Shipment Status Distribution",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/status-distribution?startDate=2026-01-01&endDate=2026-12-31",
               "host": [
@@ -1109,14 +1266,23 @@
                 }
               ]
             },
-            "description": "Breakdown of shipments grouped by lifecycle status (PENDING, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED)."
+            "description": "Breakdown of shipments grouped by lifecycle status (PENDING, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED). Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Hub Performance Ranking",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/hub-performance?startDate=2026-01-01&endDate=2026-12-31",
               "host": [
@@ -1142,14 +1308,23 @@
                 }
               ]
             },
-            "description": "Performance metrics per hub: total shipments processed, deliveries, and revenue."
+            "description": "Performance metrics per hub: total shipments processed, deliveries, and revenue. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Courier Performance Leaderboard",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/courier-performance?startDate=2026-01-01&endDate=2026-12-31",
               "host": [
@@ -1175,14 +1350,23 @@
                 }
               ]
             },
-            "description": "Courier performance metrics: assigned count, delivered count, and completion rate."
+            "description": "Courier performance metrics: assigned count, delivered count, and completion rate. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Shipments Report Export (JSON / CSV)",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/reports/shipments?startDate=2026-01-01&endDate=2026-12-31&status=DELIVERED&hubId={{hubId}}&format=json",
               "host": [
@@ -1224,14 +1408,23 @@
                 }
               ]
             },
-            "description": "Detailed shipment records exportable in standard JSON or downloadable CSV format."
+            "description": "Detailed shipment records exportable in standard JSON or downloadable CSV format. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Admin - Payments Report Export (JSON / CSV)",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/admin/reports/payments?startDate=2026-01-01&endDate=2026-12-31&status=PAID&format=json",
               "host": [
@@ -1268,14 +1461,23 @@
                 }
               ]
             },
-            "description": "Detailed financial transaction records exportable in JSON or CSV."
+            "description": "Detailed financial transaction records exportable in JSON or CSV. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Courier - Personal Performance Overview",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/courier/overview?startDate=2026-01-01&endDate=2026-12-31",
               "host": [
@@ -1301,14 +1503,23 @@
                 }
               ]
             },
-            "description": "Personal metrics for the authenticated courier: assigned deliveries, completed deliveries, and personal completion rate."
+            "description": "Personal metrics for the authenticated courier: assigned deliveries, completed deliveries, and personal completion rate. Uses Headers -> Authorization: {{accessToken}}."
           }
         },
         {
           "name": "Customer - Personal Shipping Overview",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/analytics/customer/overview?startDate=2026-01-01&endDate=2026-12-31",
               "host": [
@@ -1334,7 +1545,7 @@
                 }
               ]
             },
-            "description": "Personal shipping summary for the authenticated customer: total shipments booked, total spend, and delivery statuses."
+            "description": "Personal shipping summary for the authenticated customer: total shipments booked, total spend, and delivery statuses. Uses Headers -> Authorization: {{accessToken}}."
           }
         }
       ]

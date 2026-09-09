@@ -29,8 +29,8 @@ export const protect = asyncHandler(async (req: Request, res: Response, next: Ne
 	let token: string | undefined;
 
 	const authHeader = req.headers.authorization;
-	if (authHeader && authHeader.startsWith("Bearer ")) {
-		token = authHeader.split(" ")[1];
+	if (authHeader) {
+		token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
 	} else if (req.cookies?.accessToken) {
 		token = req.cookies.accessToken;
 	}
