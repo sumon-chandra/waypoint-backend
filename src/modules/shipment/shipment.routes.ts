@@ -1,11 +1,16 @@
 import { Router } from "express";
 import * as ShipmentController from "./shipment.controller";
 import { validateRequest } from "../../middlewares/validate-request";
-import { createShipmentSchema, updateShipmentStatusSchema } from "./shipment.validation";
+import {
+	createShipmentSchema,
+	updateShipmentStatusSchema,
+	assignCourierSchema,
+} from "./shipment.validation";
 import { authGuard } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
+// Customer Endpoints
 router.post(
 	"/",
 	authGuard("CUSTOMER"),
@@ -19,6 +24,7 @@ router.get(
 	ShipmentController.getMyShipments
 );
 
+// Courier Endpoints
 router.get(
 	"/assigned-shipments",
 	authGuard("COURIER"),
@@ -30,6 +36,26 @@ router.patch(
 	authGuard("COURIER"),
 	validateRequest(updateShipmentStatusSchema),
 	ShipmentController.updateShipmentStatus
+);
+
+// Admin Endpoints
+router.get(
+	"/",
+	authGuard("ADMIN"),
+	ShipmentController.getAllShipments
+);
+
+router.get(
+	"/all",
+	authGuard("ADMIN"),
+	ShipmentController.getAllShipments
+);
+
+router.patch(
+	"/:id/assign-courier",
+	authGuard("ADMIN"),
+	validateRequest(assignCourierSchema),
+	ShipmentController.assignCourier
 );
 
 export const ShipmentRoutes = router;

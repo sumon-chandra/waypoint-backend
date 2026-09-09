@@ -17,3 +17,12 @@ export const updateShipmentStatusSchema = z.object({
 });
 
 export type UpdateShipmentStatusInput = z.infer<typeof updateShipmentStatusSchema>["body"];
+
+export const assignCourierSchema = z.object({
+	body: z.object({
+		courierId: z.string().min(1, "Courier ID is required"),
+		hubId: z.string().optional(),
+	}),
+});
+
+export type AssignCourierInput = z.infer<typeof assignCourierSchema>["body"];
