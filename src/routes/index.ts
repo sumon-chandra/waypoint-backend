@@ -4,6 +4,7 @@ import { AuthRoutes } from "../modules/auth/auth.route";
 import { ShipmentRoutes } from "../modules/shipment/shipment.routes";
 import { PaymentRoutes } from "../modules/payment/payment.routes";
 import { HubRoutes } from "../modules/hub/hub.routes";
+import { AnalyticsRoutes } from "../modules/analytics/analytics.routes";
 
 const mainRouter = Router();
 
@@ -13,6 +14,7 @@ const moduleRoutes = [
 	{ path: "/shipments", route: ShipmentRoutes },
 	{ path: "/payments", route: PaymentRoutes },
 	{ path: "/hubs", route: HubRoutes },
+	{ path: "/analytics", route: AnalyticsRoutes },
 ];
 
 moduleRoutes.forEach((route) => {
