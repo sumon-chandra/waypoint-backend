@@ -1,0 +1,1343 @@
+{
+  "info": {
+    "_postman_id": "a3b90f42-491c-4e89-8d74-waypoint-api-v1",
+    "name": "Waypoint Delivery & Logistics API",
+    "description": "Production API Collection for Waypoint Delivery & Logistics Platform hosted at https://waypointapi.vercel.app.\n\n### Authentication\nMost endpoints require a JWT Bearer token. Authenticating via `/api/v1/auth/login` or `/api/v1/auth/register` will automatically set the `accessToken` variable.\n\n### Roles Supported\n- **CUSTOMER**: Creates shipments, tracks their shipments, pays via Stripe, views customer analytics.\n- **COURIER**: Views assigned shipments, updates shipment delivery status, views courier analytics.\n- **ADMIN**: Manages hubs, assigns couriers to shipments, reads all shipments/users, views full business analytics & export reports.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://waypointapi.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "shipmentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "courierId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "hubId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "stripeSignature",
+      "value": "t=1614555555,v1=sample_test_signature",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00. Health Check",
+      "description": "Server root health and verification endpoints",
+      "item": [
+        {
+          "name": "Server Root Welcome / Health Check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": []
+            },
+            "description": "Verify that the backend server is online and operational at https://waypointapi.vercel.app."
+          }
+        }
+      ]
+    },
+    {
+      "name": "01. Authentication",
+      "description": "User registration, login, JWT token refresh, OAuth, and current profile",
+      "item": [
+        {
+          "name": "Register User (Customer / Courier / Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        pm.environment.set('accessToken', json.data.accessToken);",
+                  "        console.log('Saved accessToken to variables: ' + json.data.accessToken.substring(0, 15) + '...');",
+                  "    }",
+                  "    if (json && json.data && json.data.refreshToken) {",
+                  "        pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "        pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Customer\",\n  \"email\": \"customer@waypoint.com\",\n  \"password\": \"Password123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new user account. Sets HTTP-only cookies and returns access token. Test script automatically captures `accessToken`."
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        pm.environment.set('accessToken', json.data.accessToken);",
+                  "        console.log('Saved accessToken to variables: ' + json.data.accessToken.substring(0, 15) + '...');",
+                  "    }",
+                  "    if (json && json.data && json.data.refreshToken) {",
+                  "        pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "        pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@waypoint.com\",\n  \"password\": \"Password123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate with email and password. Automatically updates the collection `accessToken` variable."
+          }
+        },
+        {
+          "name": "Get Current User Profile (/me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Fetches details of the currently authenticated user based on the Bearer access token."
+          }
+        },
+        {
+          "name": "Refresh Access Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        pm.environment.set('accessToken', json.data.accessToken);",
+                  "        console.log('Saved accessToken to variables: ' + json.data.accessToken.substring(0, 15) + '...');",
+                  "    }",
+                  "    if (json && json.data && json.data.refreshToken) {",
+                  "        pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "        pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/refresh-token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
+            },
+            "description": "Issues a new JWT access token using the provided refresh token or HTTP-only cookie."
+          }
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Clears session authentication cookies."
+          }
+        },
+        {
+          "name": "Google OAuth Login / Verification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "        pm.environment.set('accessToken', json.data.accessToken);",
+                  "        console.log('Saved accessToken to variables: ' + json.data.accessToken.substring(0, 15) + '...');",
+                  "    }",
+                  "    if (json && json.data && json.data.refreshToken) {",
+                  "        pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "        pm.environment.set('refreshToken', json.data.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"sample-google-id-token-jwt\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/google",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google"
+              ]
+            },
+            "description": "Exchange Google OAuth ID token or auth code for backend session."
+          }
+        },
+        {
+          "name": "Google OAuth Redirect URL",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/google",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google"
+              ]
+            },
+            "description": "Initiates Google OAuth consent screen redirect flow."
+          }
+        },
+        {
+          "name": "Google OAuth Callback",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/google/callback?code=sample_oauth_authorization_code",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google",
+                "callback"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "sample_oauth_authorization_code",
+                  "description": "Authorization code returned by Google"
+                }
+              ]
+            },
+            "description": "OAuth callback handler that exchanges authorization code for user session and redirects to frontend."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Users",
+      "description": "User management and retrieval",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            },
+            "description": "Retrieve a list of all registered users across the platform."
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Shipments",
+      "description": "Shipment booking, customer tracking, courier delivery handling, and admin dispatching",
+      "item": [
+        {
+          "name": "Customer - Create Shipment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.id) {",
+                  "        pm.collectionVariables.set('shipmentId', json.data.id);",
+                  "        pm.environment.set('shipmentId', json.data.id);",
+                  "        console.log('Saved shipmentId to variables: ' + json.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiverName\": \"Karim Uddin\",\n  \"receiverPhone\": \"01819283746\",\n  \"weightKg\": 4.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments"
+              ]
+            },
+            "description": "Create a new parcel delivery shipment. Requires CUSTOMER role. Generates tracking number and initial PENDING status. Automatically saves `shipmentId`."
+          }
+        },
+        {
+          "name": "Customer - Get My Shipments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments/my-shipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments",
+                "my-shipments"
+              ]
+            },
+            "description": "Retrieve all shipments created by the authenticated customer."
+          }
+        },
+        {
+          "name": "Courier - Get Assigned Shipments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments/assigned-shipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments",
+                "assigned-shipments"
+              ]
+            },
+            "description": "Retrieve shipments assigned to the currently authenticated courier."
+          }
+        },
+        {
+          "name": "Courier - Update Shipment Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_TRANSIT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{shipmentId}}",
+                  "description": "Shipment UUID"
+                }
+              ]
+            },
+            "description": "Update the status of an assigned shipment. Allowed statuses: PENDING, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED."
+          }
+        },
+        {
+          "name": "Admin - Get All Shipments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments"
+              ]
+            },
+            "description": "Retrieve all shipments in the system. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Admin - Get All Shipments (Alias)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments",
+                "all"
+              ]
+            },
+            "description": "Alternative endpoint to retrieve all shipments. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Admin - Assign Courier To Shipment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courierId\": \"{{courierId}}\",\n  \"hubId\": \"{{hubId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shipments/:id/assign-courier",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipments",
+                ":id",
+                "assign-courier"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{shipmentId}}",
+                  "description": "Shipment UUID"
+                }
+              ]
+            },
+            "description": "Assign a courier (and optional hub) to a shipment. Requires ADMIN role. Updates shipment status to ASSIGNED."
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Hubs (Admin Only)",
+      "description": "Distribution hub creation, updates, listing, and deletion (Requires ADMIN role)",
+      "item": [
+        {
+          "name": "Create Hub",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json && json.data && json.data.id) {",
+                  "        pm.collectionVariables.set('hubId', json.data.id);",
+                  "        pm.environment.set('hubId', json.data.id);",
+                  "        console.log('Saved hubId to variables: ' + json.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Central Hub Dhaka\",\n  \"address\": \"Banani, Dhaka 1213\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/hubs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hubs"
+              ]
+            },
+            "description": "Create a new logistics hub. Requires ADMIN role. Automatically saves `hubId`."
+          }
+        },
+        {
+          "name": "Get All Hubs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/hubs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hubs"
+              ]
+            },
+            "description": "List all operational hubs with current shipment counts. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Get Hub By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/hubs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hubs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{hubId}}",
+                  "description": "Hub UUID"
+                }
+              ]
+            },
+            "description": "Retrieve details of a single hub by UUID. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Update Hub",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Central Hub Banani\",\n  \"address\": \"Road 11, Banani, Dhaka 1213\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/hubs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hubs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{hubId}}",
+                  "description": "Hub UUID"
+                }
+              ]
+            },
+            "description": "Update hub name and address. Requires ADMIN role."
+          }
+        },
+        {
+          "name": "Delete Hub",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/hubs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hubs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{hubId}}",
+                  "description": "Hub UUID"
+                }
+              ]
+            },
+            "description": "Remove a hub from the system. Requires ADMIN role."
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Payments",
+      "description": "Stripe Checkout session creation and webhook event verification",
+      "item": [
+        {
+          "name": "Create Stripe Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipmentId\": \"{{shipmentId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/create-checkout-session",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "create-checkout-session"
+              ]
+            },
+            "description": "Initiates a Stripe Checkout Session for the specified shipment. Returns the hosted checkout URL and session ID. Requires CUSTOMER role."
+          }
+        },
+        {
+          "name": "Create Payment Intent (Legacy Alias)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipmentId\": \"{{shipmentId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/create-intent",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "create-intent"
+              ]
+            },
+            "description": "Backward compatible alias for `create-checkout-session`. Requires CUSTOMER role."
+          }
+        },
+        {
+          "name": "Stripe Webhook Listener (/webhook)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "stripe-signature",
+                "value": "{{stripeSignature}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"evt_test_postman_webhook\",\n  \"object\": \"event\",\n  \"type\": \"checkout.session.completed\",\n  \"data\": {\n    \"object\": {\n      \"id\": \"cs_test_session_id\",\n      \"payment_intent\": \"pi_test_intent_id\",\n      \"customer\": \"cus_test_id\",\n      \"metadata\": {\n        \"shipmentId\": \"{{shipmentId}}\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/webhook",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "webhook"
+              ]
+            },
+            "description": "Stripe Webhook handler. Validates `stripe-signature` and updates Payment & Shipment status upon checkout completion."
+          }
+        },
+        {
+          "name": "Stripe Webhook Listener (/webhook/stripe)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "stripe-signature",
+                "value": "{{stripeSignature}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"evt_test_postman_webhook_stripe\",\n  \"object\": \"event\",\n  \"type\": \"checkout.session.completed\",\n  \"data\": {\n    \"object\": {\n      \"id\": \"cs_test_session_id\",\n      \"payment_intent\": \"pi_test_intent_id\",\n      \"customer\": \"cus_test_id\",\n      \"metadata\": {\n        \"shipmentId\": \"{{shipmentId}}\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/webhook/stripe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "webhook",
+                "stripe"
+              ]
+            },
+            "description": "Alternative Stripe Webhook path alias configured in the router."
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Analytics",
+      "description": "Business intelligence, revenue trends, status distribution, hub/courier performance, and exportable reports",
+      "item": [
+        {
+          "name": "Admin - Key Metrics Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/overview?startDate=2026-01-01&endDate=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "overview"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Optional filter start date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Optional filter end date (YYYY-MM-DD)"
+                }
+              ]
+            },
+            "description": "High-level summary of total shipments, revenue, delivery success rate, active couriers, and hubs."
+          }
+        },
+        {
+          "name": "Admin - Trends (Daily / Weekly / Monthly)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/trends?startDate=2026-01-01&endDate=2026-12-31&interval=day",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "trends"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Filter start date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Filter end date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "interval",
+                  "value": "day",
+                  "description": "Aggregation bucket: day | week | month"
+                }
+              ]
+            },
+            "description": "Time-series volume and revenue analytics aggregated by day, week, or month."
+          }
+        },
+        {
+          "name": "Admin - Shipment Status Distribution",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/status-distribution?startDate=2026-01-01&endDate=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "status-distribution"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Optional filter start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Optional filter end date"
+                }
+              ]
+            },
+            "description": "Breakdown of shipments grouped by lifecycle status (PENDING, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED)."
+          }
+        },
+        {
+          "name": "Admin - Hub Performance Ranking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/hub-performance?startDate=2026-01-01&endDate=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "hub-performance"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Optional start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Optional end date"
+                }
+              ]
+            },
+            "description": "Performance metrics per hub: total shipments processed, deliveries, and revenue."
+          }
+        },
+        {
+          "name": "Admin - Courier Performance Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/courier-performance?startDate=2026-01-01&endDate=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "courier-performance"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Optional start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Optional end date"
+                }
+              ]
+            },
+            "description": "Courier performance metrics: assigned count, delivered count, and completion rate."
+          }
+        },
+        {
+          "name": "Admin - Shipments Report Export (JSON / CSV)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/reports/shipments?startDate=2026-01-01&endDate=2026-12-31&status=DELIVERED&hubId={{hubId}}&format=json",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "reports",
+                "shipments"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Filter start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Filter end date"
+                },
+                {
+                  "key": "status",
+                  "value": "DELIVERED",
+                  "description": "Optional status filter"
+                },
+                {
+                  "key": "hubId",
+                  "value": "{{hubId}}",
+                  "description": "Optional hub UUID filter"
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "description": "Export format: json | csv"
+                }
+              ]
+            },
+            "description": "Detailed shipment records exportable in standard JSON or downloadable CSV format."
+          }
+        },
+        {
+          "name": "Admin - Payments Report Export (JSON / CSV)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/admin/reports/payments?startDate=2026-01-01&endDate=2026-12-31&status=PAID&format=json",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "admin",
+                "reports",
+                "payments"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Filter start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Filter end date"
+                },
+                {
+                  "key": "status",
+                  "value": "PAID",
+                  "description": "Optional payment status: UNPAID | PENDING | PAID | FAILED | EXPIRED"
+                },
+                {
+                  "key": "format",
+                  "value": "json",
+                  "description": "Export format: json | csv"
+                }
+              ]
+            },
+            "description": "Detailed financial transaction records exportable in JSON or CSV."
+          }
+        },
+        {
+          "name": "Courier - Personal Performance Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/courier/overview?startDate=2026-01-01&endDate=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "courier",
+                "overview"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Optional filter start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Optional filter end date"
+                }
+              ]
+            },
+            "description": "Personal metrics for the authenticated courier: assigned deliveries, completed deliveries, and personal completion rate."
+          }
+        },
+        {
+          "name": "Customer - Personal Shipping Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/customer/overview?startDate=2026-01-01&endDate=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "customer",
+                "overview"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "description": "Optional filter start date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-12-31",
+                  "description": "Optional filter end date"
+                }
+              ]
+            },
+            "description": "Personal shipping summary for the authenticated customer: total shipments booked, total spend, and delivery statuses."
+          }
+        }
+      ]
+    }
+  ]
+}
