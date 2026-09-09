@@ -14,8 +14,11 @@ model User {
   banReason       String?
   banExpires      DateTime?
 
+  stripeCustomerId String?
+
   customerShipments Shipment[] @relation("CustomerShipments")
   courierShipments  Shipment[] @relation("CourierShipments")
+  payments          Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

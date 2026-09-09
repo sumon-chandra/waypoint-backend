@@ -18,6 +18,12 @@ const envConfigs = {
 	google_client_secret: (process.env.GOOGLE_CLIENT_SECRET || "") as string,
 	google_callback_url: (process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/v1/auth/google/callback") as string,
 	frontend_url: (process.env.FRONTEND_URL || "http://localhost:5173") as string,
+	stripe: {
+		secret_key: (process.env.STRIPE_SECRET_KEY || "") as string,
+		webhook_secret: (process.env.STRIPE_WEBHOOK_SECRET || "") as string,
+	},
+	stripe_secret_key: (process.env.STRIPE_SECRET_KEY || "") as string,
+	stripe_webhook_secret: (process.env.STRIPE_WEBHOOK_SECRET || "") as string,
 };
 
 export default envConfigs;

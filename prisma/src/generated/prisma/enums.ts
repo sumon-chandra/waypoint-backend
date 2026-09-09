@@ -40,7 +40,10 @@ export type ShipmentStatus = (typeof ShipmentStatus)[keyof typeof ShipmentStatus
 
 export const PaymentStatus = {
   UNPAID: 'UNPAID',
-  PAID: 'PAID'
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
 } as const
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

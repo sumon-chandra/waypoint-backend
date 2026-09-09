@@ -5,6 +5,7 @@ import mainRouter from "./routes";
 import globalErrorHandler from "./middlewares/global-error-handler";
 import { notFound } from "./middlewares/not-found";
 import envConfigs from "./configs/env-configs";
+import { PaymentWebhookRoutes } from "./modules/payment/payment.webhook.routes";
 
 const app = express();
 
@@ -18,6 +19,14 @@ app.use(
 );
 
 app.use(cookieParser());
+
+// Stripe webhook requires the raw, unparsed request body to verify the cryptographic signature
+app.use(
+	["/api/v1/payments/webhook", "/api/v1/webhook"],
+	express.raw({ type: "*/*" }),
+	PaymentWebhookRoutes
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

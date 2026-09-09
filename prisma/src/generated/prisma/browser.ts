@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type Hub = Prisma.HubModel
 /**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
  * Model Shipment
  * 
  */
